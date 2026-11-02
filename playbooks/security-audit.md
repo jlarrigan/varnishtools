@@ -5,6 +5,8 @@ _"Can someone do something in this app they shouldn't be able to?" The dedicated
 ## ▶️ How to run this
 **In the target repo's Claude session:** `/varnish security` (or _"Read this file and run a security audit on this repo."_). Add a profile if you want one: `/varnish security quick` · `/varnish security deep`. Add `learn` for a lesson per finding. Add paths to scope it: `/varnish security app/api/billing`.
 
+**Repo must stay untouched?** If the user says so (or the repo isn't theirs to write to), write the report wherever they name instead of `audits/`, and say so in the header.
+
 Claude will: detect the stack and load its modules → **map** the app (Step 1) → pick **hunters** from the map and run them **look-only** (Step 2) → a **coverage critic** looks for what nobody checked (Step 3) → a separate **skeptic** tries to disprove every finding (Step 4) → write `audits/<YYYY-MM-DD>-security-<HHMM>.md` → show you the headline.
 
 The Audit-mode rules in `skills/varnish/SKILL.md` apply in full (no edits outside `audits/`, no git writes, no installs, read-only SQL, ask before touching any live account). This playbook adds one more: **never send traffic to a deployed site, a real account, or a paid API to prove a finding.** Evidence comes from source, config, git history, migrations, and build output already on disk.
@@ -21,7 +23,7 @@ The Audit-mode rules in `skills/varnish/SKILL.md` apply in full (no edits outsid
 | Profile | What runs | Good for |
 |---|---|---|
 | `quick` | map → H1 + H2 → skeptic. No critic round; gaps are listed as not covered. | small apps, re-runs, a fast first look |
-| `standard` (default) | map → every hunter the map calls for → one critic round → skeptic. About 10 agents on a small app. | most apps |
+| `standard` (default) | map → every hunter the map calls for → one critic round → skeptic. About 10 agents on a small app; a large monorepo needs 15-20 (split hunters per subsystem). | most apps |
 | `deep` | hunters split per subsystem → critic rounds until one comes back clean → skeptic | larger apps, money or health data, before a big launch |
 
 Profiles change how much ground is covered, never the evidence bar.
@@ -60,12 +62,17 @@ Copy this block into every hunter's prompt, word for word.
    ("ids are unguessable, but /api/search lists them: see F05").
 10. Committed or hardcoded keys count as real unless they are provably dummies
    (a literal FAKE, all zeros). Either way, add "is this key live?" to Needs a check.
+   Don't open gitignored secret files (.env, keychains) to prove a key is live, and
+   never copy a secret value into your results: cite file:line and the key type.
+12. Describe, don't weaponise. Say which code path lets which kind of user reach
+   what, in plain words. No payloads, no request recipes, no step-by-step exploit.
+   Keep each entry short and write results as you go, so a cut-off loses little.
 11. A known-vulnerable dependency is a finding only if the app uses the vulnerable
    feature in a way the code shows. Otherwise it goes to Needs a check.
 ```
 
 **Hunter return shape** (one entry per finding):
-`id` · `class` · `claim` (one sentence) · `attacker → gets → how` · `path` (file:line chain from way-in to the harm) · `evidence` (quoted lines) · `proposed severity` · `cost of doing nothing` (High when it's reachable now and gets worse as users and data grow; Low when it stays inert) · `chain` (other findings that supply its prerequisites, if any) · `needs-a-check fact` (if the decision hinges on something outside the repo) · then a **Checked and clean** list: every way-in or check this hunter covered with no finding.
+`id` · `class` · `claim` (one sentence) · `who · could reach what · through which code` (a sentence, not a recipe) · `path` (file:line chain from way-in to the harm) · `evidence` (quoted lines) · `proposed severity` · `cost of doing nothing` (High when it's reachable now and gets worse as users and data grow; Low when it stays inert) · `chain` (other findings that supply its prerequisites, if any) · `needs-a-check fact` (if the decision hinges on something outside the repo) · then a **Checked and clean** list: every way-in or check this hunter covered with no finding.
 
 ## Step 1 — Map the app (before any hunting)
 Ten minutes of mapping is what turns a checklist into an audit. Answer five questions and write the answers into the report's **Map** section:
@@ -85,7 +92,7 @@ The output is one table, which is also the coverage list in the report:
 **Prior runs.** Read earlier `audits/*-security-*.md` reports (their Coverage sections) and `audits/*-plan-*.md` (the Accepted-Risk Ledger). Aim this run at what wasn't covered last time and what changed since (`git log` on those paths). Accepted items aren't re-litigated, per `_report-shape.md`.
 
 ## Step 2 — Hunt
-Each hunter is a **fresh subagent**. Give it the Map, its brief below (pasted), the rules block (pasted, word for word), and the paths of the loaded stack modules and of `codebase-audit.md` so it reads them itself. IDs: H1-H7 below; the add-ons are HT (teams), HS (spend), HC (supply chain), HM (mobile). No subagents in your tool? Run each hunter as its own deliberate pass, re-reading the rules block before each one, and say so in the header. Run them in parallel. **H1 and H2 always run**; the rest run when the map gives them something to hunt. Mark the others N/A with a reason. On `deep`, split H2-H5 per subsystem.
+Each hunter is a **fresh subagent**. Give it the Map, its brief below (pasted), the rules block (pasted, word for word), and the paths of the loaded stack modules and of `codebase-audit.md` so it reads them itself. IDs: H1-H7 below; the add-ons are HT (teams), HS (spend), HC (supply chain), HM (mobile). No subagents in your tool? Run each hunter as its own deliberate pass, re-reading the rules block before each one, and say so in the header. Run them in parallel. **H1 and H2 always run**; the rest run when the map gives them something to hunt. Mark the others N/A with a reason. Split H2-H5 per subsystem (API, database, web, mobile) whenever one hunter's scope wouldn't fit comfortably in one context: always on `deep`, and on `standard` for monorepos and large apps. Record the split in the header. **A hunter came back cut off or empty?** Re-run it once, narrower and terse (rule 12), and note it in the header; if it fails again, list its scope under Not covered.
 
 **H1 · Obvious things (always).** Literal, not creative: check every item and report each result. Run the security-tagged passes in `codebase-audit.md` (3, 10, 15, 20, 28) and then:
 - grep for hardcoded secrets: `password`, `secret`, `apikey`, `token`, `Bearer`, `-----BEGIN`, provider key formats (stack modules list them)
@@ -154,6 +161,8 @@ A flag isn't a finding until you trace the impact: a cookie without `HttpOnly` m
 One fresh agent gets the Map, every hunter's **Checked and clean** list, and the findings list (not the hunters' reasoning). Its only job: **what did nobody check?** A way in no hunter touched, an actor/resource pair nobody tested, a hunter the map called for that didn't run. Each gap becomes a short brief for one more hunter round. `standard`: one critic; if it names gaps, one extra hunter round on them, and whatever is still open goes under Not covered. `deep`: critic and extra round repeat until a critic comes back clean. `quick`: no critic; every gap the map shows goes under Not covered.
 
 ## Step 4 — Verify (a separate skeptic)
+More than about 15 candidates? Split them across two or three skeptics by area; each is still fresh and sees only its own candidates. Findings from the critic's extra round go through a skeptic too, and count in N.
+
 **First, dedupe.** Hunters overlap. Merge entries that share a root cause and location into one candidate (keep every hunter's evidence), number them `C01, C02, …`, and record both counts. **"N raw" in the tally is this deduplicated candidate count.** The header also says how many hunter entries went in ("62 hunter entries → 26 candidates").
 
 Hand every candidate (ID, claim, path, chain) to a **fresh subagent** whose job is to disprove it. It checks:
