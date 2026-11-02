@@ -118,6 +118,18 @@ Audits **find**; the plan **decides**; you (and your agent) **fix**. Detection, 
 - **Claude Code without the plugin:** same clone, then _"Read ~/varnishtools/START.md and run varnish security on this repo."_ _(Claude will ask permission to read outside the repo; allow it.)_
 - **As reading**: every playbook stands alone as a written process a human can follow.
 
+## Companion tools
+Varnish checks how the code holds up. These cover ground it doesn't, and pair well with it:
+
+| For | Use | Why |
+|---|---|---|
+| **Design audits** (web) | [impeccable](https://github.com/pbakaus/impeccable): `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` | Critiques and polishes the interface itself: hierarchy, type, color, layout, UX copy, accessibility. `/impeccable audit` is the design-side twin of `/varnish`. |
+| **Motion and feel** | [apple-design](https://github.com/emilkowalski/skills) (Emil Kowalski, MIT) | Apple's approach to fluid, physical interfaces, translated for the web: springs, gestures, sheets, materials, typography. Use it when reviewing how the app *feels*, not just how it looks. |
+| **Security beyond app code** | [Cloudflare's security-audit skill](https://github.com/cloudflare/security-audit-skill) | Where `/varnish security`'s method came from. Reach for it on targets Varnish doesn't cover: native and memory-unsafe code, custom protocols, kernels, large infrastructure. |
+| **Security on every PR** | Claude Code's built-in `/security-review` | Reviews just the pending changes. Varnish audits the whole app now and then; this catches new holes as they land. |
+
+_Have one you'd add? Tell me on [LinkedIn](https://www.linkedin.com/in/jordanlarrigan)._
+
 ## Why this exists
 1. **For me**: stop retyping the same process every project. Externalize it once, reuse it forever.
 2. **For others**: share how I think about building and shipping software.
