@@ -1,12 +1,12 @@
 {
-  "name": "varnish",
-  "version": "1.2.0",
-  "description": "Varnish your codebase: runnable engineering audits as a finishing coat. A plain-English launch go/no-go for first-time and AI-built apps, codebase audits by bucket, per-feature audits, SEO/AI-search audits, remediation planning, architecture reviews, compliance prechecks. (No relation to the HTTP cache.)",
+  "name": "varnishtools",
+  "version": "1.3.0",
+  "description": "VarnishTools: runnable engineering audits as a finishing coat, invoked as /varnish. A plain-English launch go/no-go for first-time and AI-built apps, a dedicated security audit, codebase audits by bucket, per-feature audits, SEO/AI-search audits, remediation planning, architecture reviews, compliance prechecks. (No relation to the Varnish HTTP cache.)",
   "author": {
     "name": "Jordan Larrigan",
     "url": "https://varnishlabs.io"
   },
-  "repository": "https://github.com/jlarrigan/varnish",
+  "repository": "https://github.com/jlarrigan/varnishtools",
   "license": "MIT",
   "keywords": [
     "audit",

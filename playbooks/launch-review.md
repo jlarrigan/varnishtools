@@ -1,6 +1,6 @@
 # Launch Review
 
-_"Is this safe to put in front of real users?" A go/no-go for apps built fast, often with AI, by people who may be shipping for the first time. It answers one question in plain language and ends with a verdict. Part of Varnish._
+_"Is this safe to put in front of real users?" A go/no-go for apps built fast, often with AI, by people who may be shipping for the first time. It answers one question in plain language and ends with a verdict. Part of VarnishTools._
 
 ## ▶️ How to run this
 **In the target repo's Claude session:** `/varnish launch` (or _"Read this file and run a launch review on this repo."_)
@@ -106,4 +106,4 @@ The verdict is about the code that was checked. Never write "secure" or "safe" u
 **Tone.** Direct, calm, specific. No scare words without a concrete "what could happen." No blame — most of these come from tools' defaults, not carelessness.
 
 ---
-_v1, 2026-10-02. Built for the people who build with AI and ship before they've had a senior engineer look. Part of Varnish._
+_v1, 2026-10-02. Built for the people who build with AI and ship before they've had a senior engineer look. Part of VarnishTools._

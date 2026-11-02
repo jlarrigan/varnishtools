@@ -1,4 +1,4 @@
-_The **deciding** step — the second half of the audit → report → action loop. Audits detect and hand back findings; **this playbook turns one or more findings reports into a decision-ready plan**: what's worth fixing, what to consciously accept, and where one upstream change collapses a whole cluster of findings instead of N band-aids. Part of Varnish Tools._
+_The **deciding** step — the second half of the audit → report → action loop. Audits detect and hand back findings; **this playbook turns one or more findings reports into a decision-ready plan**: what's worth fixing, what to consciously accept, and where one upstream change collapses a whole cluster of findings instead of N band-aids. Part of VarnishTools._
 
 # Remediation Plan
 
@@ -98,6 +98,8 @@ An upstream fix enters the work order if it collapses **any** `fix`-verdict find
 
 **Contain first.** If any input report has a 🚨 Contain-today section, those items go **above the work order as Phase 0, today**, in plain words, regardless of upstream fixes or quick-win rules. A plan that defers rotating a live key until after a refactor is wrong. Containment isn't the fix — the underlying finding still gets dispositioned normally.
 
+**Needs-a-check items** (from a `security` report) aren't findings yet, so they don't get a verdict. List them in the plan as **owner checks**, each with its check, right after Phase 0: once checked, it either becomes a finding for the next plan or closes. Hardening notes are optional work: bring one in only when an upstream fix makes it free.
+
 **Learn mode** (if the user added `learn`, or the input report was in Learn mode): end the plan with "What to take from this" — three to five lessons, each tied to the fixes that teach it. Format per `_report-shape.md`.
 
 **Write for the person who will act on it.** Open the plan with a one-screen **"Do these today"** summary in plain language (at most 5 items) before the tables. If the repo looks like a first-time or AI-built app, give each work item a short prompt the user could paste into their AI tool (Lovable, Cursor, Claude Code) to make the fix, plus how to check it worked.
@@ -107,4 +109,4 @@ An upstream fix enters the work order if it collapses **any** `fix`-verdict find
 **→ Handoff:** the plan goes to implementation — item by item in the repo's session, or via a planning skill (superpowers writing-plans) for the bigger upstream projects. Future audits check this plan's ledger and Disputed sections before writing findings (see `_report-shape.md`).
 
 ---
-_v1.2, 2026-10-02 — contain-first Phase 0, plain-language summary, paste-able fix prompts, footer. v1.1, 2026-07-21 — v1 same day, hardened after a 3-critic adversarial review (defaults/trigger collision, accept-cluster blindness, dormant-catastrophe carve-out, ledger regrowth-muting, disputed exit, rung composition). Born from re-prompting the same two instructions after every audit: "decide what's worth doing" and "look for the fix one or two steps up." Part of Varnish Tools._
+_v1.2, 2026-10-02 — contain-first Phase 0, plain-language summary, paste-able fix prompts, footer. v1.1, 2026-07-21 — v1 same day, hardened after a 3-critic adversarial review (defaults/trigger collision, accept-cluster blindness, dormant-catastrophe carve-out, ledger regrowth-muting, disputed exit, rung composition). Born from re-prompting the same two instructions after every audit: "decide what's worth doing" and "look for the fix one or two steps up." Part of VarnishTools._

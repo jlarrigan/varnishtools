@@ -1,15 +1,15 @@
 {
-  "name": "varnish",
+  "name": "varnishtools",
   "owner": {
     "name": "Jordan Larrigan",
     "url": "https://varnishlabs.io"
   },
   "plugins": [
     {
-      "name": "varnish",
+      "name": "varnishtools",
       "source": ".",
-      "description": "Varnish your codebase: runnable engineering audits as a finishing coat. A plain-English launch go/no-go for first-time and AI-built apps, codebase audits by bucket, per-feature audits, SEO/AI-search audits, remediation planning, architecture reviews, compliance prechecks. (No relation to the HTTP cache.)"
+      "description": "VarnishTools: runnable engineering audits as a finishing coat, invoked as /varnish. A plain-English launch go/no-go for first-time and AI-built apps, a dedicated security audit, codebase audits by bucket, per-feature audits, SEO/AI-search audits, remediation planning, architecture reviews, compliance prechecks. (No relation to the Varnish HTTP cache.)"
     }
   ],
-  "description": "Varnish \u2014 runnable engineering audit playbooks from Varnish Labs. The finishing coat for shipped code."
+  "description": "VarnishTools: runnable engineering audit playbooks from Varnish Labs. The finishing coat for shipped code."
 }

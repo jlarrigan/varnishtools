@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 — 2026-11-02
+- **Renamed to VarnishTools** so it's easy to tell apart from the Varnish HTTP cache. The repo is now `jlarrigan/varnishtools` (the old URL redirects) and the plugin is `varnishtools@varnishtools`. **The command is still `/varnish`.** If you installed an earlier version, swap it once: `/plugin uninstall varnish@varnish`, `/plugin marketplace remove varnish`, `/plugin marketplace add jlarrigan/varnishtools`, `/plugin install varnishtools@varnishtools`.
+- **New: a dedicated security audit** (`playbooks/security-audit.md`, `/varnish security`). It maps the app first (actors, what's worth taking, every way in, where the decisions are made), then sends focused hunters chosen from the map: obvious things, who can call this, injection, business logic, feature abuse and leaks, AI and agents, and a wildcard, plus teams, spend, supply-chain, and mobile hunters when the stack calls for them. A coverage critic looks for what nobody checked, and a skeptic tries to disprove every finding. Profiles: `quick`, `standard`, `deep`.
+- **Three outcomes instead of two.** Findings are confirmed holes; **Needs a check** names the exact fact the repo can't show (a dashboard setting, a host behaviour) and how to check it, with no severity; **Hardening notes** are worth doing but aren't holes.
+- **Calibrated security severity** anchors for High / Med / Low, and every fix direction names the rule, the last place to enforce it, and the test that proves it.
+- **AI module: a security section** for agents and RAG: injection through what the model reads, data bleeding between users, memory poisoning, tools with more power than the user, approvals not tied to the exact action, MCP trust, and model output in dangerous places.
+- `codebase security` still runs the old bucket's five passes; `everything` is unchanged.
+- The method is adapted from Cloudflare's security-audit skill (MIT); see Credits in the README.
+
 ## 1.2.0 — 2026-10-02
 - **Stack modules** (`playbooks/stacks/`). The core passes are now stack-neutral; Next.js, Vite SPA (incl. Lovable/Bolt/v0), Expo/React Native, Node API, Vercel/serverless, Supabase, Firebase, payments, and AI/LLM modules add each platform's specifics and load only when detected. Passes 17 and 19 now live in the Expo module. A web app run no longer reads mobile material.
 - **New: `/varnish status`.** Progress across past runs in `audits/`: came back, decided-but-not-done, open, fixed, ledger triggers, and one recommended next run. Look-only, writes nothing.

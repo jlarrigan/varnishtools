@@ -1,6 +1,6 @@
 ---
 name: varnish
-description: Varnish the current repo — run an engineering audit, review, or remediation plan using the Varnish playbooks. A finishing coat for shipped code. Types — launch (is this app safe to put in front of real users? plain-language go/no-go, built for people new to shipping), codebase audits by bucket (cleancode, architecture, security, reliability, scalability, delivery, accessibility, docs, all), feature (vertical per-feature audit), seo (marketing-site SEO + AI-search visibility), plan (turn findings reports into a remediation plan), architecture-review (the deep rebuild-vs-refactor review — distinct from the routine architecture bucket), compliance (SOC2/ISO/PCI/HIPAA precheck), status (progress across past runs: fixed, regressed, accepted, still open). Add `learn` to any run for a short lesson with each finding.
+description: Varnish the current repo — run an engineering audit, review, or remediation plan using the Varnish playbooks. A finishing coat for shipped code. Types — launch (is this app safe to put in front of real users? plain-language go/no-go, built for people new to shipping), security (the dedicated security audit: map the app, focused hunters, coverage critic, every finding proven against the code; quick/standard/deep), codebase audits by bucket (cleancode, architecture, reliability, scalability, delivery, accessibility, docs, all), feature (vertical per-feature audit), seo (marketing-site SEO + AI-search visibility), plan (turn findings reports into a remediation plan), architecture-review (the deep rebuild-vs-refactor review — distinct from the routine architecture bucket), compliance (SOC2/ISO/PCI/HIPAA precheck), status (progress across past runs: fixed, regressed, accepted, still open). Add `learn` to any run for a short lesson with each finding.
 argument-hint: <type> [scope] [learn]
 ---
 
@@ -17,7 +17,8 @@ Parse `$ARGUMENTS` as `<type> [scope...]` and dispatch:
 | `<type>` | Playbook to read and run | Notes |
 |---|---|---|
 | `launch` (alias: `ready`, `safe`) | `${CLAUDE_PLUGIN_ROOT}/playbooks/launch-review.md` | **Is this safe to put in front of real users?** Plain-language go/no-go. The right first run for anyone new to shipping. |
-| `cleancode` · `architecture` · `security` · `reliability` · `scalability` · `delivery` · `accessibility` · `docs` · `all` (alias: `everything`) | `${CLAUDE_PLUGIN_ROOT}/playbooks/codebase-audit.md` | The bucket IS the type. Run the passes tagged with that bucket. `codebase <bucket>` also accepted. |
+| `security` | `${CLAUDE_PLUGIN_ROOT}/playbooks/security-audit.md` | The dedicated security audit: map the app, focused hunters, coverage critic, skeptic. Optional profile `quick` · `standard` (default) · `deep`, and optional paths as scope. Its H1 hunter runs the codebase audit's security-tagged passes, so nothing from the old bucket is lost. `codebase security` still runs just the bucket's passes. |
+| `cleancode` · `architecture` · `reliability` · `scalability` · `delivery` · `accessibility` · `docs` · `all` (alias: `everything`) | `${CLAUDE_PLUGIN_ROOT}/playbooks/codebase-audit.md` | The bucket IS the type. Run the passes tagged with that bucket. `codebase <bucket>` also accepted (including `codebase security`). |
 | `feature` | `${CLAUDE_PLUGIN_ROOT}/playbooks/feature-audit.md` | Scope = the feature name/paths, or diff against the base branch by default. |
 | `seo` | `${CLAUDE_PLUGIN_ROOT}/playbooks/seo-audit.md` | For a marketing site. Scope = URL or site dir if given. |
 | `plan` · `remediate` | `${CLAUDE_PLUGIN_ROOT}/playbooks/remediation-plan.md` | Scope = a report file in `audits/`, or "everything since <date>". Default: all reports newer than the newest existing plan; if no plan exists yet, all reports in `audits/`. |
@@ -25,17 +26,19 @@ Parse `$ARGUMENTS` as `<type> [scope...]` and dispatch:
 | `compliance` | `${CLAUDE_PLUGIN_ROOT}/playbooks/compliance-review.md` | CIS v8 → SOC2/ISO/PCI/HIPAA precheck. |
 | `status` (alias: `progress`) | `${CLAUDE_PLUGIN_ROOT}/playbooks/status.md` | Progress across past runs in `audits/`: fixed, came back, accepted, still open. Cheap; reads reports, spot-checks the code. |
 
-**Also load** `${CLAUDE_PLUGIN_ROOT}/playbooks/_report-shape.md` whenever running any Audit type (codebase buckets, `feature`, `seo`) — it is the shared report contract every Audit writes — and on `launch` (for the severity scale, the contain-today rules, and the footer). A `compliance` run additionally loads `codebase-audit.md` (its reuse rows run passes from there); a `plan` run may load `_report-shape.md` (the contract of the reports it consumes). _(If not installed as a plugin, resolve these paths relative to this file's repo: `playbooks/` sits two levels up.)_
+**Also load** `${CLAUDE_PLUGIN_ROOT}/playbooks/_report-shape.md` whenever running any Audit type (codebase buckets, `security`, `feature`, `seo`) — it is the shared report contract every Audit writes — and on `launch` (for the severity scale, the contain-today rules, and the footer). A `compliance` run additionally loads `codebase-audit.md` (its reuse rows run passes from there); a `plan` run may load `_report-shape.md` (the contract of the reports it consumes). _(If not installed as a plugin, resolve these paths relative to this file's repo: `playbooks/` sits two levels up.)_
 
 **Stack modules.** Before running any Audit, Review, or `launch`, detect the stack and load the matching modules from `${CLAUDE_PLUGIN_ROOT}/playbooks/stacks/` — the signals table is in `stacks/_index.md`. Load only the modules that match; record them in the report header. (`plan` and `status` don't need them.)
 
 **Learn mode.** If `learn` appears anywhere in `$ARGUMENTS` (e.g. `varnish security learn`), strip it from the scope and run the playbook with Learn mode on, as defined in `_report-shape.md`. `launch` runs with Learn mode on by default.
 
+**Security profile.** On a `security` run, `quick` / `standard` / `deep` anywhere in `$ARGUMENTS` is the profile, not a scope path: strip it and pass it to the playbook. No profile means `standard`.
+
 **Ambiguity rule:** `varnish architecture` means the routine codebase-audit *bucket*. If the user's phrasing suggests the deep review ("should we rebuild", "review the architecture", "is the design right"), ask one clarifying question before running — the two differ in cost by an order of magnitude.
 
 **No/unknown type:** show the table above in one compact list with a one-line description each, and ask which to run. Do not guess between Audits and Reviews. **If the user seems new to shipping** (no tests, no CI, built with Lovable/Bolt/Replit/v0, asks "is my app safe?"), recommend `launch` first.
 
-**Cost check:** `all` / `everything` and `architecture-review` are long, expensive runs. Before starting one, say so in one line and confirm. If the repo looks like a first-time or AI-built app, suggest `launch` instead — it answers the question they actually have, faster.
+**Cost check:** `all` / `everything`, `architecture-review`, and `security deep` are long, expensive runs. Before starting one, say so in one line and confirm. If the repo looks like a first-time or AI-built app, suggest `launch` instead — it answers the question they actually have, faster.
 
 ## ⛔ Audit mode — hard rules (override every playbook)
 

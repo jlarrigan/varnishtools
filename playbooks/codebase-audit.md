@@ -13,7 +13,7 @@ Claude will: take the passes tagged with that bucket → detect the stack and lo
 |---|---|---|
 | `cleancode` | **hygiene only** — lint, dead code, unused deps, DRY, type-hygiene, naming/clarity, test-hygiene, comment-truth, magic-numbers _(the biggest line-count wins live here)_ | 1, 2, 3, 4, 6, 9, 11, 30, 31 |
 | `architecture` | layering, separation of concerns, contracts, idempotency, boundaries, testability/coverage | 5, 7, 15 |
-| `security` | who can call what, secrets in code and in the browser, database rules (RLS), rate limits and AI spend, webhooks, PII/privacy, dependency vulns and fake packages | 3, 10, 15, 20, 28 |
+| `security` | who can call what, secrets in code and in the browser, database rules (RLS), rate limits and AI spend, webhooks, PII/privacy, dependency vulns and fake packages. _The deep version is its own playbook, `security-audit.md` (`/varnish security`); this bucket runs inside `all` and via `codebase security`._ | 3, 10, 15, 20, 28 |
 | `reliability` | errors, observability, SLO/health, alerting, durability, blast radius _(SRE)_ | 8, 12, 13, 14, 15, 24, 25, 26 |
 | `scalability` | perf, cost, N+1s, caching, cold-starts | 16, 23 |
 | `delivery` | deploy/rollback, migrations, OTA, CI, flags, env | 3, 16, 17, 18, 19, 20, 21, 22 |
@@ -348,4 +348,4 @@ _These are **diff-scoped** when there's a base to diff against — they check wh
 - Once the fixes land: a cleaner, smaller, safer repo, and CI guards so the gains don't erode.
 
 ---
-_v1.1, 2026-10-02 — audits made look-only, real verifier, whole-repo scope fallback, client-direct backends, expanded security pass. Part of Varnish._
+_v1.1, 2026-10-02 — audits made look-only, real verifier, whole-repo scope fallback, client-direct backends, expanded security pass. Part of VarnishTools._

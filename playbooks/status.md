@@ -1,6 +1,6 @@
 # Status
 
-_Progress across every Varnish run in this repo: what got fixed, what came back, what was accepted, and what's still open. Reads what's already in `audits/` plus a quick look at the code. It isn't a new audit, it doesn't change anything, and it's cheap. Part of Varnish._
+_Progress across every Varnish run in this repo: what got fixed, what came back, what was accepted, and what's still open. Reads what's already in `audits/` plus a quick look at the code. It isn't a new audit, it doesn't change anything, and it's cheap. Part of VarnishTools._
 
 ## ▶️ How to run this
 `/varnish status` (alias: `progress`) in the target repo. Optional scope: a date (`since 2026-09-01`) or a type (`security`).
@@ -62,4 +62,4 @@ Plain English throughout. If `learn` was passed, add one lesson for any finding 
 Close with the author footer from `_report-shape.md`.
 
 ---
-_v1.1, 2026-10-02 (change scan + 🆕, partial fixes, canonical IDs, outside-the-code fixes) after a test on a simulated week of work. Part of Varnish._
+_v1.1, 2026-10-02 (change scan + 🆕, partial fixes, canonical IDs, outside-the-code fixes) after a test on a simulated week of work. Part of VarnishTools._

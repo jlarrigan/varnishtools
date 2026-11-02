@@ -1,6 +1,6 @@
 # Compliance Review — technical precheck
 
-_Run your tech audit, see roughly where you stand against the common compliance frameworks. A **technical precheck / gut-check** — to get ahead of a real audit, not to replace one. Part of Varnish Tools._
+_Run your tech audit, see roughly where you stand against the common compliance frameworks. A **technical precheck / gut-check** — to get ahead of a real audit, not to replace one. Part of VarnishTools._
 
 ## ▶️ How to run this (read me first)
 **In the target repo's own Claude session, say:** _"Read this file and run the compliance precheck on this repo."_

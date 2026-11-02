@@ -1,17 +1,28 @@
-# Varnish
+# VarnishTools
 
-_The finishing coat for shipped code. You varnish woodwork after you build it so the work lasts; same idea. (No relation to the HTTP cache.)_
+_The finishing coat for shipped code. You varnish woodwork after you build it so the work lasts; same idea. The command is `/varnish`. (No relation to the Varnish HTTP cache.)_
 
 Jordan Larrigan's engineering playbooks: the stuff that's usually in my head after 20 years of building products and running tech orgs, written down so I don't have to re-explain it every time, and so other people (and their AI agents) can use it too.
 
 ## Install
 
 ```
-/plugin marketplace add jlarrigan/varnish
-/plugin install varnish@varnish
+/plugin marketplace add jlarrigan/varnishtools
+/plugin install varnishtools@varnishtools
 ```
 
-That's it. `/varnish` is now available in every repo. _(No install? See [Other ways to use this](#other-ways-to-use-this) below.)_
+That's it. `/varnish` is now available in every repo.
+
+**Installed it before 1.3.0, when it was called `varnish`?** Swap it once:
+
+```
+/plugin uninstall varnish@varnish
+/plugin marketplace remove varnish
+/plugin marketplace add jlarrigan/varnishtools
+/plugin install varnishtools@varnishtools
+```
+
+The command is still `/varnish`, and your `audits/` folders keep working. _(No install? See [Other ways to use this](#other-ways-to-use-this) below.)_
 
 ## Use
 
@@ -20,7 +31,8 @@ Open Claude Code in the repo you want audited and pick a lane. **New to shipping
 | Command | What it does |
 |---|---|
 | `/varnish launch` | **Start here.** "Is this safe to put in front of real users?" Plain-English go/no-go: open databases, keys the public can see, routes anyone can call, fakeable payments, AI endpoints billing you for strangers. Every finding comes with a fix prompt you can paste into your AI tool |
-| `/varnish security` | One bucket: `cleancode · architecture · security · reliability · scalability · delivery · accessibility · docs` |
+| `/varnish security` | **The security audit.** Maps who can reach what in your app, sends focused hunters after each kind of hole (who can call this, injection, business logic, feature abuse, AI agents, the obvious stuff), proves every finding against the code, and lists what it didn't cover. `quick` · `deep` profiles |
+| `/varnish reliability` | One bucket: `cleancode · architecture · reliability · scalability · delivery · accessibility · docs` |
 | `/varnish feature <name>` | Vertical audit of ONE feature, every dimension, graded A–D. Run it pre-merge |
 | `/varnish seo` | Marketing-site SEO + AI-search visibility (every finding carries an evidence tier) |
 | `/varnish status` | Progress across past runs: what's fixed, what came back, what you decided to fix and haven't, what's still open. Cheap, changes nothing |
@@ -102,8 +114,8 @@ Audits **find**; the plan **decides**; you (and your agent) **fix**. Detection, 
 
 ## Other ways to use this
 
-- **Cursor, Codex, Copilot, Gemini CLI, Windsurf:** clone this repo once (`git clone https://github.com/jlarrigan/varnish ~/varnish`), then tell your agent: _"Read ~/varnish/START.md and run varnish launch on this project."_ [`START.md`](START.md) also has a three-line snippet for your project's `AGENTS.md` or a Cursor rule so "varnish launch" works by name.
-- **Claude Code without the plugin:** same clone, then _"Read ~/varnish/START.md and run varnish security on this repo."_ _(Claude will ask permission to read outside the repo; allow it.)_
+- **Cursor, Codex, Copilot, Gemini CLI, Windsurf:** clone this repo once (`git clone https://github.com/jlarrigan/varnishtools ~/varnishtools`), then tell your agent: _"Read ~/varnishtools/START.md and run varnish launch on this project."_ [`START.md`](START.md) also has a three-line snippet for your project's `AGENTS.md` or a Cursor rule so "varnish launch" works by name.
+- **Claude Code without the plugin:** same clone, then _"Read ~/varnishtools/START.md and run varnish security on this repo."_ _(Claude will ask permission to read outside the repo; allow it.)_
 - **As reading**: every playbook stands alone as a written process a human can follow.
 
 ## Why this exists
@@ -123,6 +135,7 @@ Rule of thumb: output is "here's what's wrong, you decide" → **Audit**. Output
 Each playbook maps a **stage of building a product or running a tech org**: what to think about at that stage, what to look for, and how to act.
 
 **Audits** (shared findings shape):
+- `playbooks/security-audit.md`: the **dedicated security audit**. Maps the app first (actors, what's worth taking, every way in, where the decisions are made), then runs focused hunters chosen from the map: obvious things, who-can-call-this, injection, business logic, feature abuse, AI and agents, and a wildcard. A coverage critic looks for what nobody checked, a skeptic tries to disprove every finding, and the report separates real holes from **needs a check** (facts only the dashboard knows) and **hardening notes**. Method adapted from Cloudflare's security-audit skill (see Credits).
 - `playbooks/codebase-audit.md`: the **routine, whole-repo** cleanup & hardening pass, after shipping a big feature (or a pile of small ones). **Self-contained and runnable:** a bucket table up top, each pass tagged with its bucket(s). _"Read this file and run the `cleancode` audit on this repo."_ Buckets: `cleancode · architecture · security · reliability · scalability · delivery · accessibility · docs · all`.
 - `playbooks/feature-audit.md`: the **vertical / per-feature** audit: point it at ONE freshly-built feature and grade how it was built across 8 dimensions (architecture & seam, performance, security & privacy, reliability, evolvability & data safety, fit, completeness, a11y). Run it the moment a feature is done, pre-merge. It's the Architecture Review's hard questions shrunk to one feature.
 - `playbooks/seo-audit.md`: the **visibility** audit for a *marketing site*: classic SEO + **GEO** (AI Overviews / ChatGPT / Perplexity citation readiness) in one pass, because the platforms say they're the same discipline. Distinctive contract: **every finding carries an evidence tier** (`[P]` platform-confirmed / `[S]` large-scale study / `[R]` peer-reviewed / `[C]` consensus) so "why should I care?" is always answerable, plus a **Cargo-Cult Ledger** that flags dead practices (llms.txt, FAQ schema, keyword density…) as findings. Born from a manual pass on a real production marketing site (2026-07); research-swept 2026-07-17.
@@ -167,7 +180,7 @@ This dissolves the "one doc vs two docs" question: the **passes are the data**, 
 
 **Audit types to route by:** the buckets are **inline in `codebase-audit.md`**: a bucket table at the top, and a `> Buckets:` tag on every pass (`cleancode`, `architecture`, `security`, `reliability`, `scalability`, `delivery`, `accessibility`, `docs`, plus `all`). A pass can belong to several buckets; the skill just runs the passes tagged with the requested one. **Wide coverage is intended**; a pass that doesn't apply gets marked N/A, not forced.
 
-**Beyond the Codebase Audit's buckets**, each other playbook routes to its own file: `feature` (`feature-audit.md`, all 8 dimensions *vertically* on one feature's slice), `seo` (`seo-audit.md`, the marketing-site visibility audit), and the Reviews `launch` (`launch-review.md`), `architecture-review` (`architecture-review.md`), and `compliance` (`compliance-review.md`). `status` reads the history (`status.md`). So the skill's full type set is: `launch` · the Codebase Audit buckets · `feature` · `seo` · `plan` (`remediation-plan.md`, the loop's second half) · `status` · `architecture-review` · `compliance`, and any of them takes `learn`.
+**Beyond the Codebase Audit's buckets**, each other playbook routes to its own file: `feature` (`feature-audit.md`, all 8 dimensions *vertically* on one feature's slice), `seo` (`seo-audit.md`, the marketing-site visibility audit), and the Reviews `launch` (`launch-review.md`), `architecture-review` (`architecture-review.md`), and `compliance` (`compliance-review.md`). `status` reads the history (`status.md`). So the skill's full type set is: `launch` · `security` · the Codebase Audit buckets · `feature` · `seo` · `plan` (`remediation-plan.md`, the loop's second half) · `status` · `architecture-review` · `compliance`, and any of them takes `learn`.
 
 **Convention for new passes:** add the pass to `codebase-audit.md` with a `> **Buckets:**` tag line. That tag *is* the routing; there's no separate table to keep in sync.
 
@@ -188,6 +201,9 @@ Don't stop at "run the audit." Each audit **writes its findings to a structured 
 ## Conventions (rough; will evolve)
 - One playbook per stage/process.
 - Each is built to be **skimmable by a human and executable by an agent**: when to run it, the goal/mindset, then concrete passes/checklists with real tooling.
-- **Versioned.** See `CHANGELOG.md`. Update with `/plugin marketplace update varnish`.
+- **Versioned.** See `CHANGELOG.md`. Update with `/plugin marketplace update varnishtools`.
+
+## Credits
+The security audit's method (map first, hunters chosen from the map, an "obvious things" sweep, a coverage critic, three outcomes, calibrated severity) is adapted from Cloudflare's [security-audit skill](https://github.com/cloudflare/security-audit-skill), MIT License, Copyright (c) 2025-2026 Cloudflare, Inc. Rewritten for VarnishTools' look-only, plain-English shape.
 
 _Started 2026-06-24._

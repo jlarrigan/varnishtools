@@ -1,4 +1,4 @@
-_The **vertical** audit: point it at ONE freshly-built feature and grade how it was built — every dimension at once — before it becomes load-bearing. Where `codebase-audit.md` sweeps one dimension across the **whole repo** and `architecture-review.md` judges the **whole system**, this traces a **single feature down through every layer** (UI → API → DB → external → jobs → config → tests) and hands back a graded scorecard + the findings. Part of Varnish Tools._
+_The **vertical** audit: point it at ONE freshly-built feature and grade how it was built — every dimension at once — before it becomes load-bearing. Where `codebase-audit.md` sweeps one dimension across the **whole repo** and `architecture-review.md` judges the **whole system**, this traces a **single feature down through every layer** (UI → API → DB → external → jobs → config → tests) and hands back a graded scorecard + the findings. Part of VarnishTools._
 
 # Feature Audit
 
@@ -166,4 +166,4 @@ Findings (grouped by dimension):
 - **Agent fan-out (how I actually do it):** build the slice map once, then spin up one agent per dimension in parallel — each scoped to the slice, each returning a **findings list with `[Severity · Cost-of-doing-nothing]` tags only (no letter grade)**. Then the aggregator runs adversarial verification **first**, applies the grade-from-findings rule to the *survivors* to assign each letter, and writes the headline last. **Grading happens once, centrally, after verification** — so the letters always match the findings that survived.
 
 ---
-_v1, 2026-06-28. Run it the moment a feature is done, fix what it flags while the fix is still cheap, then let `codebase-audit.md` guard it from there. Part of Varnish Tools._
+_v1, 2026-06-28. Run it the moment a feature is done, fix what it flags while the fix is still cheap, then let `codebase-audit.md` guard it from there. Part of VarnishTools._

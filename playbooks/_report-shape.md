@@ -1,4 +1,4 @@
-_The shared report contract every **Audit** writes (Codebase Audit, Feature Audit, SEO Audit). The two **Reviews** (Architecture Review, Compliance Review) have their own deliverables and don't use this. The point of one shape: any Audit's report is a **predictable interface** — a human, a brainstorm, or a future skill can consume any of them the same way. Part of Varnish Tools._
+_The shared report contract every **Audit** writes (Codebase Audit, Security Audit, Feature Audit, SEO Audit). The two **Reviews** (Architecture Review, Compliance Review) have their own deliverables and don't use this. The point of one shape: any Audit's report is a **predictable interface** — a human, a brainstorm, or a future skill can consume any of them the same way. Part of VarnishTools._
 
 # Audit Report Shape
 
@@ -19,9 +19,9 @@ These two — and *not* effort — are what let you triage each finding into **b
 **Why not Effort?** Effort is a property of the *solution*, not the *finding* — and you don't know it until you've decided *how* you're fixing it. Tagging effort per-finding silently assumes you'll fix each one individually, which is exactly the band-aid trap. **Effort gets assigned in the brainstorm, on the chosen solution** — which may be one upstream change that kills a whole cluster.
 
 ## The shape
-**Filename:** `audits/<YYYY-MM-DD>-<type>[-<scope>]-<HHMM>.md`. Get the date/time from the shell (`date +%Y-%m-%d`, `date +%H%M`, local) so same-day re-runs don't collide. `<type>` = the bucket for the Codebase Audit (`cleancode`, …) or `feature` for the Feature Audit; `<scope>` = optional qualifier (a feature slug, a subsystem).
+**Filename:** `audits/<YYYY-MM-DD>-<type>[-<scope>]-<HHMM>.md`. Get the date/time from the shell (`date +%Y-%m-%d`, `date +%H%M`, local) so same-day re-runs don't collide. `<type>` = the bucket for the Codebase Audit (`cleancode`, …), `security` for the Security Audit, `seo` for the SEO Audit, or `feature` for the Feature Audit; `<scope>` = optional qualifier (a feature slug, a subsystem).
 
-1. **Header** — date · audit type · target / scope · base ref + HEAD SHA (or "whole repo") · mode (look-only) · verification tally: **"N raw → M kept (K dropped, J adjusted, A added by the verifier)"**. No tally, no "verified" claim.
+1. **Header** — date · audit type · target / scope · base ref + HEAD SHA (or "whole repo") · mode (look-only) · verification tally: **"N raw → M kept (K dropped, J adjusted, A added by the verifier)"** (the Security Audit adds "C moved to needs-a-check"). No tally, no "verified" claim.
 2. **🚨 Contain today (only if something is exposed right now)** — the one exception to "no prescriptions." If a finding means real users or real money are at risk *today* (a live secret key in the browser or in git history, a database table anyone can read or write, an open AI endpoint billing you, a payment path anyone can fake), list it here first, in plain words, with the first containment step (usually: rotate the key in the provider dashboard; switch on the access rule; take the route offline). One or two lines each. Everything else waits for the plan.
 3. **Findings headline** — one can't-miss line reading the state: how many findings, how many **High-severity**, how many **High-cost-of-doing-nothing**, and the worst-hit areas by name. It's a *read of the findings*, not a directive. (An Audit may add its own at-a-glance layer here — e.g. the Feature Audit's per-dimension scorecard, or the Codebase Audit's per-bucket scorecard on an `all` run — as long as it stays a *characterization*, not a command.)
 4. **Findings, grouped by area / subsystem** — *not* pre-sorted by severity. Grouping by where they live makes **clusters visible** ("five of these are all in the sync layer — maybe the sync layer is the problem"), which is what feeds the remediation plan's upstream-fix hunt. Each finding:
@@ -36,7 +36,7 @@ These two — and *not* effort — are what let you triage each finding into **b
 5. **→ Handoff** — close every report with: *"Run `remediation-plan.md` on this report to decide solutions — disposition every finding, hunt the upstream fixes that collapse clusters. Effort and sequencing get decided there, on the chosen solutions."* (`playbooks/remediation-plan.md` is the written-down version of that brainstorm; it runs the same way every time.)
 6. **Version stamp** — `varnish <plugin version> · <playbook> · <date>`.
 7. **Author footer** — close every report with this line, verbatim:
-   > _Varnish is Jordan Larrigan's playbooks, written down. Stuck on a finding, or want a second set of eyes on the fix? Reach Jordan on [LinkedIn](https://www.linkedin.com/in/jordanlarrigan)._
+   > _VarnishTools is Jordan Larrigan's playbooks, written down. Stuck on a finding, or want a second set of eyes on the fix? Reach Jordan on [LinkedIn](https://www.linkedin.com/in/jordanlarrigan)._
 
 ## Learn mode
 On when the user adds `learn` to the command (`varnish security learn`), and on by default in `launch`. For people building their fundamentals as they ship: the report teaches the pattern, not just the instance.
@@ -63,4 +63,4 @@ Audits that re-argue decided risks every run train the reader to skim — which 
 An Audit may layer **measurement** on top of this (e.g. the Codebase Audit's Pass-0 baseline metrics + before/after deltas) — that's data, not a decision, so it fits.
 
 ---
-_v1.1, 2026-10-02 (contain-today, plain-English line, verification tally, footer). v1 2026-06-28. The Audit envelope — Reviews keep their own shapes. Part of Varnish._
+_v1.1, 2026-10-02 (contain-today, plain-English line, verification tally, footer). v1 2026-06-28. The Audit envelope — Reviews keep their own shapes. Part of VarnishTools._

@@ -1,4 +1,4 @@
-_The deep, run-rarely **judgment call**: "is this the right system, built the right way — and should we rebuild any of it before we keep paying to extend it?" A **Review**, not an Audit — it ends in a *decision* (the rebuild-vs-refactor ledger), not a uniform findings list. Run rarely (new system, inherited codebase, post-rewrite, or when the routine Codebase Audit keeps finding the same rot). Companion to `codebase-audit.md`. Part of Varnish Tools._
+_The deep, run-rarely **judgment call**: "is this the right system, built the right way — and should we rebuild any of it before we keep paying to extend it?" A **Review**, not an Audit — it ends in a *decision* (the rebuild-vs-refactor ledger), not a uniform findings list. Run rarely (new system, inherited codebase, post-rewrite, or when the routine Codebase Audit keeps finding the same rot). Companion to `codebase-audit.md`. Part of VarnishTools._
 
 # Architecture Review
 
@@ -123,4 +123,4 @@ The routine audit assumes "refactor in place, small safe steps" — correct for 
 - **Tools:** git churn analysis (`git log --numstat` aggregation, or code-forensics for churn-vs-complexity hotspot maps); Sentry issue grouping by file/module for defect density; coverage for the scary zones; `dependency-cruiser` to confirm a replaceable seam exists.
 
 ---
-_Run this rarely, decide deliberately, then let the routine `codebase-audit.md` guard what you decided. Part of Varnish Tools._
+_Run this rarely, decide deliberately, then let the routine `codebase-audit.md` guard what you decided. Part of VarnishTools._

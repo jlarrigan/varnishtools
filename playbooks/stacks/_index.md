@@ -1,6 +1,6 @@
 # Stack modules
 
-_The core playbooks are written stack-neutral. A stack module adds the exact files, settings, tools, and traps for one platform, keyed by the core pass it sharpens. Load only the modules whose signals you find, so a web app never reads about OTA updates and a mobile app never reads about server actions. Part of Varnish._
+_The core playbooks are written stack-neutral. A stack module adds the exact files, settings, tools, and traps for one platform, keyed by the core pass it sharpens. Load only the modules whose signals you find, so a web app never reads about OTA updates and a mobile app never reads about server actions. Part of VarnishTools._
 
 ## How to use
 1. **Detect** (a minute): read `package.json` (and `app.json`, `pubspec.yaml`, `requirements.txt` if present), config files, and top-level folders.
@@ -16,7 +16,7 @@ _The core playbooks are written stack-neutral. A stack module adds the exact fil
 | `vite-spa.md` | `vite` dependency with React/Vue/Svelte and no server framework; Lovable, Bolt, or v0 scaffolding |
 | `expo-react-native.md` | `expo` or `react-native` dependency, `app.json`/`app.config.*`, `eas.json` |
 | `node-api.md` | `hono`, `express`, `fastify`, `koa`, or `@nestjs/*` server code |
-| `vercel-serverless.md` | `vercel.json`, `.vercel/`, `@vercel/*`, `netlify.toml`, `netlify/functions/`, `serverless.yml`, AWS Lambda handlers. (Next.js `app/api/` routes alone don't count — that's `nextjs.md`. Load this when there's evidence of where it deploys.) |
+| `vercel-serverless.md` | `vercel.json`, `.vercel/`, `@vercel/*`, `netlify.toml`, `netlify/functions/`, `serverless.yml`, AWS Lambda handlers. (Next.js `app/api/` routes alone don't count — that's `nextjs.md`. Load this when there's evidence of where it deploys: those files, or code and comments that name the platform.) |
 | `supabase.md` | `@supabase/*` dependency, a `supabase/` folder, `SUPABASE_` env vars |
 | `firebase.md` | `firebase` / `firebase-admin` dependency, `firebase.json`, `*.rules` files |
 | `payments.md` | `stripe`, `@stripe/*`, `react-native-purchases` (RevenueCat), `@lemonsqueezy/*`, `paddle` |
