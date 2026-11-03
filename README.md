@@ -85,7 +85,7 @@ Accepted risks go in a ledger future audits **respect**: consciously declined fi
 `/varnish security` writes the same kind of report, with three outcomes instead of two, so a guess never shows up as a High:
 
 ```
-audits/2026-11-02-security-1528.md
+audits/2026-11-02-security-1042.md
 
 Findings: 9 total · 2 High · map: 14 ways in, 4 actors
 ── Sharing ────────────────────────────────────────────
