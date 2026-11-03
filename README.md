@@ -82,6 +82,24 @@ Work order: 1. U1 (S)  2. F04 idempotency key (S)  3. U2 env schema (M) ...
 
 Accepted risks go in a ledger future audits **respect**: consciously declined findings stay declined instead of being re-argued every run.
 
+`/varnish security` writes the same kind of report, with three outcomes instead of two, so a guess never shows up as a High:
+
+```
+audits/2026-11-02-security-1528.md
+
+Findings: 9 total · 2 High · map: 14 ways in, 4 actors
+── Sharing ────────────────────────────────────────────
+F03 [High · High] api/share/[token].ts:6: the share token is just the
+    note id, so anyone who sees one id can read any note.
+    Who · gets · how: a stranger · any note · decodes a share link
+
+Needs a check (the repo can't show it)
+  1. /admin relies on host password protection. Is it on in production?
+     Check: Vercel → Settings → Deployment Protection.
+
+Hardening notes: 3 · Not covered this run: 2 (live RLS state, OAuth flow)
+```
+
 ## Want a second set of eyes?
 Varnish is how I'd review your project if you asked me. If you're stuck on a finding, not sure the fix is right, or want me to look at the whole thing, reach me on [LinkedIn](https://www.linkedin.com/in/jordanlarrigan). Every report ends with the same pointer.
 
@@ -185,14 +203,26 @@ They cover overlapping *topics* (architecture, reliability, …) but ask differe
 
 **On the overlap:** intentional. Same topics, two altitudes (the Codebase Audit: "did we drift?"; the Architecture Review: "is the target right?"). The Audit hands you findings to act on; the Review hands you a decision. Same subject, different job.
 
+## Which security run?
+
+| You want to know | Run | Cost |
+|---|---|---|
+| "Can I put this in front of real users?" | `/varnish launch` | minutes; twelve checks, a verdict, fix prompts |
+| A fast security pass, or a re-run after fixes | `/varnish security quick` | roughly a third of a standard run |
+| "Can someone do something they shouldn't?" | `/varnish security` | about 10 agents on a small app, 15-20 on a large monorepo (about an hour) |
+| Before a big launch, or with money or health data | `/varnish security deep` | the most; critic rounds until nothing is left unchecked |
+| Just the security passes inside a codebase audit | `/varnish codebase security` | light; five passes, no map or hunters |
+
+Start with `launch` if you're new to shipping. Run `security` when real users are arriving, after changes to sign-in, roles, payments, or the data model, and again after fixing: one run typically finds about half of what repeated runs find, and the next run aims at what the last one didn't cover.
+
 ## The skill layer
-The playbooks are wrapped in a **skill** (`skills/varnish/SKILL.md`) you invoke by type: `varnish <bucket>` (e.g. `varnish security`, or `varnish everything`) / `varnish feature` / `varnish seo` / `varnish plan` (Audits + the Planner) and `varnish architecture-review` / `varnish compliance` (Reviews). It assembles just the passes for that type, then (optionally) fans them out as agents.
+The playbooks are wrapped in a **skill** (`skills/varnish/SKILL.md`) you invoke by type: `varnish security` (the dedicated security audit) / `varnish <bucket>` (e.g. `varnish reliability`, or `varnish everything`) / `varnish feature` / `varnish seo` / `varnish plan` (Audits + the Planner) and `varnish architecture-review` / `varnish compliance` (Reviews). It assembles just the passes for that type, then (optionally) fans them out as agents.
 
 This dissolves the "one doc vs two docs" question: the **passes are the data**, tagged by which audit types they belong to; the skill is the router that selects them. How the files are arranged matters less than the tags.
 
 **Audit types to route by:** the buckets are **inline in `codebase-audit.md`**: a bucket table at the top, and a `> Buckets:` tag on every pass (`cleancode`, `architecture`, `security`, `reliability`, `scalability`, `delivery`, `accessibility`, `docs`, plus `all`). A pass can belong to several buckets; the skill just runs the passes tagged with the requested one. **Wide coverage is intended**; a pass that doesn't apply gets marked N/A, not forced.
 
-**Beyond the Codebase Audit's buckets**, each other playbook routes to its own file: `feature` (`feature-audit.md`, all 8 dimensions *vertically* on one feature's slice), `seo` (`seo-audit.md`, the marketing-site visibility audit), and the Reviews `launch` (`launch-review.md`), `architecture-review` (`architecture-review.md`), and `compliance` (`compliance-review.md`). `status` reads the history (`status.md`). So the skill's full type set is: `launch` · `security` · the Codebase Audit buckets · `feature` · `seo` · `plan` (`remediation-plan.md`, the loop's second half) · `status` · `architecture-review` · `compliance`, and any of them takes `learn`.
+**Beyond the Codebase Audit's buckets**, each other playbook routes to its own file: `security` (`security-audit.md`, the deep security audit; `codebase security` still runs just the bucket's five passes), `feature` (`feature-audit.md`, all 8 dimensions *vertically* on one feature's slice), `seo` (`seo-audit.md`, the marketing-site visibility audit), and the Reviews `launch` (`launch-review.md`), `architecture-review` (`architecture-review.md`), and `compliance` (`compliance-review.md`). `status` reads the history (`status.md`). So the skill's full type set is: `launch` · `security` · the Codebase Audit buckets · `feature` · `seo` · `plan` (`remediation-plan.md`, the loop's second half) · `status` · `architecture-review` · `compliance`, and any of them takes `learn`.
 
 **Convention for new passes:** add the pass to `codebase-audit.md` with a `> **Buckets:**` tag line. That tag *is* the routing; there's no separate table to keep in sync.
 

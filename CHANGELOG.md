@@ -6,6 +6,9 @@
 - **Three outcomes instead of two.** Findings are confirmed holes; **Needs a check** names the exact fact the repo can't show (a dashboard setting, a host behaviour) and how to check it, with no severity; **Hardening notes** are worth doing but aren't holes.
 - **Calibrated security severity** anchors for High / Med / Low, and every fix direction names the rule, the last place to enforce it, and the test that proves it.
 - **AI module: a security section** for agents and RAG: injection through what the model reads, data bleeding between users, memory poisoning, tools with more power than the user, approvals not tied to the exact action, MCP trust, and model output in dangerous places.
+- **Built for large repos too:** hunters split per subsystem on big apps, several skeptics past ~15 candidates, a retry step for a hunter that comes back cut off, and findings described in plain words rather than as exploit recipes. Tested on a seeded sample app (16 of 16 holes found, 0 false positives) and on a production monorepo.
+- **Repo must stay untouched?** Name another place for the report and the run writes nothing in the repo.
+- **README: Companion tools** (impeccable and apple-design for design audits, Cloudflare's skill for targets Varnish doesn't cover, `/security-review` on every PR) and a "Which security run?" guide.
 - `codebase security` still runs the old bucket's five passes; `everything` is unchanged.
 - The method is adapted from Cloudflare's security-audit skill (MIT); see Credits in the README.
 
