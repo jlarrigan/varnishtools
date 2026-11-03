@@ -8,7 +8,7 @@
 - **AI module: a security section** for agents and RAG: injection through what the model reads, data bleeding between users, memory poisoning, tools with more power than the user, approvals not tied to the exact action, MCP trust, and model output in dangerous places.
 - **Built for large repos too:** hunters split per subsystem on big apps, several skeptics past ~15 candidates, a retry step for a hunter that comes back cut off, and findings described in plain words rather than as exploit recipes. Tested on a seeded sample app (16 of 16 holes found, 0 false positives) and on a production monorepo.
 - **Repo must stay untouched?** Name another place for the report and the run writes nothing in the repo.
-- **README: Companion tools** (impeccable and apple-design for design audits, Cloudflare's skill for targets Varnish doesn't cover, `/security-review` on every PR) and a "Which security run?" guide.
+- **README: Recommended skills** (impeccable and apple-design for design and feel; superpowers, Supabase, and Expo skills for the fixing; `/security-review` and Cloudflare's skill for more security) and a "Which security run?" guide.
 - `codebase security` still runs the old bucket's five passes; `everything` is unchanged.
 - The method is adapted from Cloudflare's security-audit skill (MIT); see Credits in the README.
 

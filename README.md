@@ -136,15 +136,30 @@ Audits **find**; the plan **decides**; you (and your agent) **fix**. Detection, 
 - **Claude Code without the plugin:** same clone, then _"Read ~/varnishtools/START.md and run varnish security on this repo."_ _(Claude will ask permission to read outside the repo; allow it.)_
 - **As reading**: every playbook stands alone as a written process a human can follow.
 
-## Companion tools
-Varnish checks how the code holds up. These cover ground it doesn't, and pair well with it:
+## Recommended skills
+Varnish checks how the code holds up. These are the skills I reach for alongside it: some cover ground Varnish doesn't, some help with the fixing after a report.
 
-| For | Use | Why |
+**Design and feel**
+
+| Skill | Install | Use it for |
 |---|---|---|
-| **Design audits** (web) | [impeccable](https://github.com/pbakaus/impeccable): `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` | Critiques and polishes the interface itself: hierarchy, type, color, layout, UX copy, accessibility. `/impeccable audit` is the design-side twin of `/varnish`. |
-| **Motion and feel** | [apple-design](https://github.com/emilkowalski/skills) (Emil Kowalski, MIT) | Apple's approach to fluid, physical interfaces, translated for the web: springs, gestures, sheets, materials, typography. Use it when reviewing how the app *feels*, not just how it looks. |
-| **Security beyond app code** | [Cloudflare's security-audit skill](https://github.com/cloudflare/security-audit-skill) | Where `/varnish security`'s method came from. Reach for it on targets Varnish doesn't cover: native and memory-unsafe code, custom protocols, kernels, large infrastructure. |
-| **Security on every PR** | Claude Code's built-in `/security-review` | Reviews just the pending changes. Varnish audits the whole app now and then; this catches new holes as they land. |
+| [impeccable](https://github.com/pbakaus/impeccable) (Paul Bakaus) | `/plugin marketplace add pbakaus/impeccable`, then `/plugin install impeccable@impeccable` | Design audits and polish: hierarchy, type, color, layout, UX copy, accessibility. `/impeccable audit` is the design-side twin of `/varnish`. |
+| [apple-design](https://www.ui-skills.com/skills/emilkowalski/apple-design) (Emil Kowalski) | `npx skills add https://github.com/emilkowalski/skills --skill apple-design` | How the app *feels*: Apple's approach to fluid, physical interfaces, translated for the web. Springs, gestures, sheets, interruptible transitions, materials, typography, reduced motion. |
+
+**Fixing what Varnish finds**
+
+| Skill | Install | Use it for |
+|---|---|---|
+| [superpowers](https://github.com/obra/superpowers) (Jesse Vincent) | `/plugin install superpowers@claude-plugins-official` | Working through a remediation plan: systematic debugging (find the root cause before the fix), test-first fixes, and checking it actually works before calling it done. |
+| [Supabase](https://github.com/supabase-community/supabase-plugin) | `/plugin install supabase@claude-plugins-official` | Fixing database findings: RLS policies, migrations, Postgres best practices, and the security advisor that answers many of a report's "needs a check" items. |
+| [Expo skills](https://github.com/expo/skills) | `/plugin install expo@claude-plugins-official` | Expo and React Native apps: animation, native UI, the design system, SDK upgrades, and EAS builds and updates. |
+
+**More security**
+
+| Tool | Use it for |
+|---|---|
+| Claude Code's built-in `/security-review` | Reviews just the pending changes, on every PR. Varnish audits the whole app now and then; this catches new holes as they land. |
+| [Cloudflare's security-audit skill](https://github.com/cloudflare/security-audit-skill) | Where `/varnish security`'s method came from. Reach for it on what Varnish doesn't cover: native and memory-unsafe code, custom protocols, kernels, large infrastructure. |
 
 _Have one you'd add? Tell me on [LinkedIn](https://www.linkedin.com/in/jordanlarrigan)._
 
